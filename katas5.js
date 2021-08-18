@@ -84,37 +84,40 @@ const testCalculateRemainder2 = () => {
 testCalculateRemainder2()
 //Katas 6
 
-const distinctValues = (values, aux) => {
-    for (let i = 0; i < values.length; i++) {
-        if (!aux.includes(values[i])) {
-            aux.push(values[i])
+const distinctValues = (x, aux) => {
+    x = x.split(" ")
+    for (let i = 0; i < x.length; i++) {
+        if (!aux.includes(x[i])) {
+            aux.push(x[i])
         }
     }
-    return aux
+    return aux.join(" ")
 }
 const testDistinctValues1 = () => {
     let aux = []
-    let result = distinctValues("1 3 5 3 7 3 1 1 5".split(" "), aux).join(" ")
+    let result = distinctValues("1 3 5 3 7 3 1 1 5", aux)
     let expected = "1 3 5 7"
     console.assert(result === expected, `esperado:${expected},obtido: ${result}`)
 }
 testDistinctValues1()
 const testDistinctValues2 = () => {
     let aux = []
-    let result = distinctValues("10 10 30 30 60 60 50 50".split(" "), aux).join(" ")
+    let result = distinctValues("10 10 30 30 60 60 50 50", aux)
     let expected = "10 30 60 50"
     console.assert(result === expected, `esperado:${expected},obtido: ${result}`)
 }
 testDistinctValues2()
 //katas 7
-const countValues = (values) => {
+const countValues = (x) => {
     let aux = []
-    let result = distinctValues(values, aux)
+    let result = distinctValues(x, aux)
+    result = result.split(" ")
+    x = x.split(" ")
     let contador = 0
     for (let i = 0; i < result.length; i++) {
         contador = 0
-        for (let j = 0; j < values.length; j++) {
-            if (result[i] === values[j]) {
+        for (let j = 0; j < x.length; j++) {
+            if (result[i] === x[j]) {
                 contador++
             }
         }
@@ -123,13 +126,13 @@ const countValues = (values) => {
     return result.join(" ")
 }
 const testCountValues1 = () => {
-    let result = countValues("1 3 5 3 7 3 1 1 5".split(" "))
+    let result = countValues("1 3 5 3 7 3 1 1 5")
     let expected = "1(3) 3(3) 5(2) 7(1)"
     console.assert(result === expected, `esperado:${expected},obtido: ${result}`)
 }
 testCountValues1()
 const testCountValues2 = () => {
-    let result = countValues("7 45 5 45 7 45 7 7 5 97 97".split(" "))
+    let result = countValues("7 45 5 45 7 45 7 7 5 97 97")
     let expected = "7(4) 45(3) 5(2) 97(2)"
     console.assert(result === expected, `esperado:${expected},obtido: ${result}`)
 }
@@ -137,18 +140,30 @@ testCountValues2()
 //Katas 8
 const evaluateExpression = (arr, obj) => {
     let aux = Object.keys(obj)
+    arr = arr.split(" ")
     let vault = Object.values(obj)
+    let resultado
     for (let i = 0; i < arr.length; i++) {
         for (let j = 0; j < arr.length; j++) {
             if (aux[i] === arr[j]) {
-                arr[j] = vault[i].toString()
+                arr[j] = vault[i]
             }
         }
     }
-    return eval(arr.join(""))
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === "+") {
+            resultado = arr[i - 1] + arr[i + 1]
+            arr[i + 1] = resultado
+        }
+        if (arr[i] === "-") {
+            resultado = arr[i - 1] - arr[i + 1]
+            arr[i + 1] = resultado
+        }
+    }
+    return resultado
 }
 const testEvaluateExpression1 = () => {
-    let result = evaluateExpression("a + b + c - d".split(" "), {
+    let result = evaluateExpression("a + b + c - d", {
         a: 1,
         b: 7,
         c: 3,
@@ -159,7 +174,7 @@ const testEvaluateExpression1 = () => {
 }
 testEvaluateExpression1()
 const testEvaluateExpression2 = () => {
-    let result = evaluateExpression("a + b + c - d + e".split(" "), {
+    let result = evaluateExpression("a + b + c - d + e", {
         a: 1,
         b: 7,
         c: 3,
